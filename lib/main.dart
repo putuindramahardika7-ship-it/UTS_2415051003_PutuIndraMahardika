@@ -5,11 +5,12 @@ import 'services/kos_api_service.dart';
 import 'services/kos_supabase_service.dart';
 import 'repositories/kos_repository.dart';
 import 'providers/kos_provider.dart';
-import 'screens/main_navigation_screen.dart';
+import 'providers/auth_provider.dart';
+import 'screens/splash_screen.dart';
 
-const String supabaseUrl = 'https://nwbggednoovhykmrcfnt.supabase.co';
+const String supabaseUrl = 'https://siguyjmbjiamchgjzadl.supabase.co';
 const String supabaseAnonKey =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53YmdnZWRub292aHlrbXJjZm50Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxNzcwNzIsImV4cCI6MjEwODc1MzA3Mn0.Fo0Mi9QUJpuSdIXYEorwOaC3yvvfoD_qxAYoPsFligY';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpZ3V5am1iamlhbWNoZ2p6YWRsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMxOTE5MzIsImV4cCI6MjEwODc2NzkzMn0.QCsrkcqzrJGjIgSuLLlZftlJJWvusiFbjWlSTrQHWHE';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,10 +26,15 @@ Future<void> main() async {
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => KosProvider(repository)
-        ..loadCatalog()
-        ..loadSavedKos(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(
+          create: (_) => KosProvider(repository)
+            ..loadCatalog()
+            ..loadSavedKos(),
+        ),
+      ],
       child: const FindMyKosApp(),
     ),
   );
@@ -46,7 +52,7 @@ class FindMyKosApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const MainNavigationScreen(),
+      home: const SplashScreen(),
     );
   }
 }
